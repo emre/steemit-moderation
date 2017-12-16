@@ -11,7 +11,7 @@ logger.setLevel(logging.INFO)
 logging.basicConfig()
 
 
-client = Bot(description="Post Bot",
+client = Bot(description="Post StatBot",
              command_prefix="$", pm_help=False)
 
 BOT_LIST = [
@@ -276,7 +276,9 @@ async def on_ready():
 @client.event
 async def on_message(message):
     if message.channel.name != POST_PAYOUT_BOT_CHANNEL_NAME:
-        logger.info("Incorrect channel")
+        return
+
+    if not message.content.startswith("http://"):
         return
 
     if '@' not in message.content:
@@ -287,8 +289,8 @@ async def on_message(message):
     if 'error' in stats:
         await client.say("Error: %s" % stats["message"])
 
-    reply = "Total Payout: **$%s**. (Organic: **$%s**, Bots: **$%s**) "
-    reply += "Net Votes: **%s**. Comments: **%s**. (*%s old.*)"
+    reply = "Total Payout: $%s. (Organic: $%s, Bots: $%s) "
+    reply += "Net Votes: %s. Comments: %s. (%s old.)"
 
     reply = reply % (
         stats["total"],
